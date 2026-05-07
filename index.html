@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>专属福利获取</title>
+    <title>合集</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f5f5f5; color: #333; }
@@ -65,7 +65,7 @@
         function copyText(text) {
             const i = document.createElement('textarea'); i.value = text; i.style.position = 'fixed'; i.style.opacity = '0';
             document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
-            const t = document.getElementById('toast'); t.innerText = '✅ 复制成功，请前往使用！'; t.style.display = 'block';
+            const t = document.getElementById('toast'); t.innerText = '✅ 复制成功，粘贴浏览器打开！'; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 2000);
         }
         init();
