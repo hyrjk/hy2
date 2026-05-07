@@ -1,74 +1,26 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>合集</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f5f5f5; color: #333; }
-        #app { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.05); overflow: hidden; }
-        .mod { padding: 0 15px; margin-top: 15px; }
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>1</title><style>* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: #f7f8fa; font-family: -apple-system, sans-serif; color: #323233; }
+        #app { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 50px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .mod { padding: 15px; }
+        .mod-notice { background: #fffbe6; color: #ed6a0c; overflow: hidden; white-space: nowrap; padding: 10px; font-size: 14px; display: flex; }
+        .notice-icon { margin-right: 8px; }
+        .notice-wrap { flex: 1; overflow: hidden; }
+        .notice-text { display: inline-block; animation: scroll 15s linear infinite; padding-left: 100%; font-weight: bold; }
+        @keyframes scroll { from { transform: translate(0,0); } to { transform: translate(-100%,0); } }
+        .mod-card { background: #fcfcfc; border: 1px solid #ebebed; border-radius: 12px; margin: 15px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+        .card-info h4 { font-size: 15px; margin-bottom: 4px; }
+        .card-info p { font-size: 12px; color: #969799; }
+        .card-btn { background: #07c160; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; border:none; cursor: pointer; }
+        .mod-time { text-align: center; color: #ee0a24; font-weight: bold; font-size: 14px; background: #fff1f0; padding: 10px; margin-bottom: 10px; }
+        .mod-footer { display: flex; align-items: center; color: #999; font-size: 12px; margin: 30px 15px 10px; }
+        .mod-footer::before, .mod-footer::after { content: ""; flex: 1; height: 1px; background: #eee; }
+        .mod-footer span { padding: 0 10px; }
         .mod-img img { width: 100%; border-radius: 8px; display: block; }
         .mod-text-box { margin: 15px; border: 2px dashed #f56c6c; padding: 15px; border-radius: 4px; text-align: center; color: #f56c6c; font-size: 16px; font-weight: bold; line-height: 1.8; word-break: break-all; }
-        .mod-step { display: flex; align-items: center; justify-content: space-between; gap: 4px; background: #fff; }
-        .step-item { flex: 1; background: #ffebeb; color: #ff5000; font-size: 13px; font-weight: bold; text-align: center; padding: 12px 0; position: relative; }
-        .step-item:first-child { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); padding-right: 12px; }
-        .step-item:nth-child(2) { clip-path: polygon(12px 50%, 0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); padding-left: 12px; padding-right: 12px; }
-        .step-item:last-child { clip-path: polygon(12px 50%, 0 0, 100% 0, 100% 100%, 0 100%); padding-left: 12px; }
-        .mod-btn { display: block; width: 100%; padding: 14px; text-align: center; border-radius: 50px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; color: #fff; text-decoration: none; }
-        .mod-btn.copy { background: linear-gradient(90deg, #ff8e00, #ff5000); box-shadow: 0 4px 10px rgba(255, 80, 0, 0.3); }
-        .mod-btn.link { background: linear-gradient(90deg, #ff5b5b, #e53935); box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3); }
-        .mod-flex-btns { display: flex; gap: 10px; justify-content: space-between; }
-        .mod-flex-btns .mod-btn { margin: 0; flex: 1; padding: 12px 5px; }
-        .mod-flex-btns.triple .mod-btn { font-size: 13px; padding: 12px 2px; }
-        #toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #fff; padding: 12px 24px; border-radius: 6px; font-size: 15px; display: none; z-index: 1000; text-align: center; }
-        </style>
-</head>
-<body>
-    <div id="loading" style="text-align:center; padding:50px; color:#999; font-size:15px;">⏳ 正在加载专属内容...</div>
-    <div id="app" style="display:none;"></div>
-    <div id="toast">提示信息</div>
-    <script>
-        const CONFIG_URL = 'https://apphd.hyrjk.cn/app/zjy/config.json';
-        async function init() {
-            try {
-                const res = await fetch(CONFIG_URL + '?t=' + Date.now());
-                const modules = await res.json();
-                render(modules);
-            } catch(e) {
-                document.getElementById('loading').innerText = '数据加载失败，请检查网络或链接配置';
-            }
-        }
-        function render(modules) {
-            let html = '';
-            modules.forEach(m => {
-                if(m.type === 'image') html += `<div class="mod mod-img"><img src="${m.url}"></div>`;
-                if(m.type === 'richtext') html += `<div class="mod-text-box">${m.html}</div>`;
-                if(m.type === 'step') html += `<div class="mod mod-step"><div class="step-item">${m.steps[0]}</div><div class="step-item">${m.steps[1]}</div><div class="step-item">${m.steps[2]}</div></div>`;
-                if(m.type === 'copyBtn') html += `<div class="mod"><button class="mod-btn copy" onclick="copyText('${m.content}')">${m.text}</button></div>`;
-                if(m.type === 'linkBtn') html += `<div class="mod"><a href="${m.url}" class="mod-btn link" target="_blank">${m.text}</a></div>`;
-                if(m.type === 'doubleBtn' || m.type === 'tripleBtn') {
-                    let cls = m.type === 'doubleBtn' ? 'double' : 'triple';
-                    html += `<div class="mod mod-flex-btns ${cls}">`;
-                    for(let i=0; i<m.btns.length; i++) {
-                        if(m.types[i] === 'link') html += `<a href="${m.vals[i]}" class="mod-btn link" target="_blank">${m.btns[i]}</a>`;
-                        else html += `<button class="mod-btn copy" onclick="copyText('${m.vals[i]}')">${m.btns[i]}</button>`;
-                    }
-                    html += `</div>`;
-                }
-            });
-            document.getElementById('app').innerHTML = html;
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-        }
-        function copyText(text) {
-            const i = document.createElement('textarea'); i.value = text; i.style.position = 'fixed'; i.style.opacity = '0';
-            document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
-            const t = document.getElementById('toast'); t.innerText = '✅ 复制成功，粘贴浏览器打开！'; t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2000);
-        }
-        init();
-    </script>
-</body>
-</html>
+        .mod-step { display: flex; background: #fff; padding: 0 15px; gap: 4px; margin-top: 15px; }
+        .step-item { flex: 1; background: #ffebeb; color: #ff5000; font-size: 12px; font-weight: bold; text-align: center; padding: 10px 0; clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%); }
+        .mod-btn { display: block; width: 100%; padding: 14px; border-radius: 50px; background: linear-gradient(90deg, #ff8e00, #ff5000); color: #fff; text-align: center; text-decoration: none; font-weight: bold; border: none; margin-top: 15px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(255,80,0,0.2); }
+        .mod-flex { display: flex; gap: 10px; padding: 0 15px; }
+        #toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.85); color: #fff; padding: 12px 24px; border-radius: 6px; display: none; z-index: 1000; }</style></head><body><div id="app"><div class="mod-notice"><span class="notice-icon">📢</span><div class="notice-wrap"><div class="notice-text">找不到软件？太麻烦？下载软件库App直接搜索 安装后点击没反应，请卸载重装试试！或者使用官网在线浏览，然后提交给群管理闪退机型等待修复即可。</div></div></div><div class="mod-text-box"><div><span style="background-color: rgb(255, 255, 255); color: rgb(247, 62, 40); font-family: &quot;Microsoft YaHei&quot;; font-size: 16px; text-align: start;">软件合集</span></div></div><div class="mod-text-box"><p style="margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;">说明：</span></span></p><p style="margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;">由于被限制无法直接打开</span></span></p><p style="margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;"><span style="margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;">请复制链接粘贴到浏览器访问</span></span></p></div><div class="mod-flex"><button class="mod-btn" onclick="copyText('https://hyy6.lanzoum.com/b00me7txg')">一键复制软件合集链接</button><button class="mod-btn" onclick="copyText('https://hyy6.lanzoum.com/b0fd4dzde')">一键复制软件库App链接</button></div><div class="mod-step"><div class="step-item">点击“下载”</div><div class="step-item">打开【浏览器】</div><div class="step-item">粘贴到浏览器打开</div></div><div class="mod-footer"><span>没有更多内容了</span></div></div><div id="toast"></div><script>function copyText(t){const e=document.createElement("textarea");e.value=t;e.style.position="fixed";e.style.opacity="0";document.body.appendChild(e);e.select();document.execCommand("copy");document.body.removeChild(e);const o=document.getElementById("toast");o.innerText="✅ 复制成功";o.style.display="block";setTimeout(()=>o.style.display="none",2000)}
+        function startTimer(h){let t=h*3600;setInterval(()=>{let hh=Math.floor(t/3600),mm=Math.floor((t%3600)/60),ss=t%60;if(document.getElementById('timer'))document.getElementById('timer').innerText=(hh<10?'0'+hh:hh)+':'+(mm<10?'0'+mm:mm)+':'+(ss<10?'0'+ss:ss);if(--t<0)t=h*3600},1000)}
+window.onload=function(){}</script><script type="application/builder-data" id="taoke-config">[{"type":"notice","id":1778134919625,"text":"找不到软件？太麻烦？下载软件库App直接搜索 安装后点击没反应，请卸载重装试试！或者使用官网在线浏览，然后提交给群管理闪退机型等待修复即可。"},{"type":"richtext","id":1778132509979,"html":"<div><span style=\"background-color: rgb(255, 255, 255); color: rgb(247, 62, 40); font-family: &quot;Microsoft YaHei&quot;; font-size: 16px; text-align: start;\">软件合集</span></div>"},{"type":"richtext","id":1778132590442,"html":"<p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">说明：</span></span></p><p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">由于被限制无法直接打开</span></span></p><p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">请复制链接粘贴到浏览器访问</span></span></p>"},{"type":"doubleBtn","id":1778132587458,"btns":["一键复制软件合集链接","一键复制软件库App链接"],"types":["copy","copy"],"vals":["https://hyy6.lanzoum.com/b00me7txg","https://hyy6.lanzoum.com/b0fd4dzde"]},{"type":"step","id":1778132624698,"steps":["点击“下载”","打开【浏览器】","粘贴到浏览器打开"]},{"type":"footer","id":1778135321511,"text":"没有更多内容了"}]</script></body></html>
