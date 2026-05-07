@@ -1,0 +1,37 @@
+[
+  {
+    "type": "richtext",
+    "id": 1778132509979,
+    "html": "<div><span style=\"background-color: rgb(255, 255, 255); color: rgb(247, 62, 40); font-family: &quot;Microsoft YaHei&quot;; font-size: 16px; text-align: start;\">软件合集</span></div>"
+  },
+  {
+    "type": "richtext",
+    "id": 1778132590442,
+    "html": "<p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">说明：</span></span></p><p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">由于被限制无法直接打开</span></span></p><p style=\"margin: 15px 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; line-height: 1.5; color: rgb(51, 51, 51); font-family: &quot;Microsoft YaHei&quot;; font-size: 14px; font-weight: 400; white-space-collapse: preserve; background-color: rgb(255, 255, 255);\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; color: rgb(207, 19, 34); font-size: 16px;\"><span style=\"margin: 0px; padding: 0px; -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-weight: bolder; outline: none;\">请复制链接粘贴到浏览器访问</span></span></p>"
+  },
+  {
+    "type": "doubleBtn",
+    "id": 1778132587458,
+    "btns": [
+      "一键复制软件合集链接",
+      "一键复制软件库App链接"
+    ],
+    "types": [
+      "copy",
+      "copy"
+    ],
+    "vals": [
+      "https://hyy6.lanzoum.com/b00me7txg",
+      "https://hyy6.lanzoum.com/b0fd4dzde"
+    ]
+  },
+  {
+    "type": "step",
+    "id": 1778132624698,
+    "steps": [
+      "点击“下载”",
+      "打开【浏览器】",
+      "粘贴到浏览器打开"
+    ]
+  }
+]
