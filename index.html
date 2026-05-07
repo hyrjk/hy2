@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>专属福利获取</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f5f5f5; color: #333; }
+        #app { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .mod { padding: 0 15px; margin-top: 15px; }
+        .mod-img img { width: 100%; border-radius: 8px; display: block; }
+        .mod-text-box { margin: 15px; border: 2px dashed #f56c6c; padding: 15px; border-radius: 4px; text-align: center; color: #f56c6c; font-size: 16px; font-weight: bold; line-height: 1.8; word-break: break-all; }
+        .mod-step { display: flex; align-items: center; justify-content: space-between; gap: 4px; background: #fff; }
+        .step-item { flex: 1; background: #ffebeb; color: #ff5000; font-size: 13px; font-weight: bold; text-align: center; padding: 12px 0; position: relative; }
+        .step-item:first-child { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); padding-right: 12px; }
+        .step-item:nth-child(2) { clip-path: polygon(12px 50%, 0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); padding-left: 12px; padding-right: 12px; }
+        .step-item:last-child { clip-path: polygon(12px 50%, 0 0, 100% 0, 100% 100%, 0 100%); padding-left: 12px; }
+        .mod-btn { display: block; width: 100%; padding: 14px; text-align: center; border-radius: 50px; font-size: 16px; font-weight: bold; border: none; cursor: pointer; color: #fff; text-decoration: none; }
+        .mod-btn.copy { background: linear-gradient(90deg, #ff8e00, #ff5000); box-shadow: 0 4px 10px rgba(255, 80, 0, 0.3); }
+        .mod-btn.link { background: linear-gradient(90deg, #ff5b5b, #e53935); box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3); }
+        .mod-flex-btns { display: flex; gap: 10px; justify-content: space-between; }
+        .mod-flex-btns .mod-btn { margin: 0; flex: 1; padding: 12px 5px; }
+        .mod-flex-btns.triple .mod-btn { font-size: 13px; padding: 12px 2px; }
+        #toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #fff; padding: 12px 24px; border-radius: 6px; font-size: 15px; display: none; z-index: 1000; text-align: center; }
+        </style>
+</head>
+<body>
+    <div id="loading" style="text-align:center; padding:50px; color:#999; font-size:15px;">⏳ 正在加载专属内容...</div>
+    <div id="app" style="display:none;"></div>
+    <div id="toast">提示信息</div>
+    <script>
+        const CONFIG_URL = 'http://apphd.hyrjk.cn/app/zjy/config.json';
+        async function init() {
+            try {
+                const res = await fetch(CONFIG_URL + '?t=' + Date.now());
+                const modules = await res.json();
+                render(modules);
+            } catch(e) {
+                document.getElementById('loading').innerText = '数据加载失败，请检查网络或链接配置';
+            }
+        }
+        function render(modules) {
+            let html = '';
+            modules.forEach(m => {
+                if(m.type === 'image') html += `<div class="mod mod-img"><img src="${m.url}"></div>`;
+                if(m.type === 'richtext') html += `<div class="mod-text-box">${m.html}</div>`;
+                if(m.type === 'step') html += `<div class="mod mod-step"><div class="step-item">${m.steps[0]}</div><div class="step-item">${m.steps[1]}</div><div class="step-item">${m.steps[2]}</div></div>`;
+                if(m.type === 'copyBtn') html += `<div class="mod"><button class="mod-btn copy" onclick="copyText('${m.content}')">${m.text}</button></div>`;
+                if(m.type === 'linkBtn') html += `<div class="mod"><a href="${m.url}" class="mod-btn link" target="_blank">${m.text}</a></div>`;
+                if(m.type === 'doubleBtn' || m.type === 'tripleBtn') {
+                    let cls = m.type === 'doubleBtn' ? 'double' : 'triple';
+                    html += `<div class="mod mod-flex-btns ${cls}">`;
+                    for(let i=0; i<m.btns.length; i++) {
+                        if(m.types[i] === 'link') html += `<a href="${m.vals[i]}" class="mod-btn link" target="_blank">${m.btns[i]}</a>`;
+                        else html += `<button class="mod-btn copy" onclick="copyText('${m.vals[i]}')">${m.btns[i]}</button>`;
+                    }
+                    html += `</div>`;
+                }
+            });
+            document.getElementById('app').innerHTML = html;
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        }
+        function copyText(text) {
+            const i = document.createElement('textarea'); i.value = text; i.style.position = 'fixed'; i.style.opacity = '0';
+            document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i);
+            const t = document.getElementById('toast'); t.innerText = '✅ 复制成功，请前往使用！'; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2000);
+        }
+        init();
+    </script>
+</body>
+</html>
